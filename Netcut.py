@@ -1,6 +1,6 @@
 from scapy.all import *
 from mac_vendor_lookup import MacLookup
-from subprocess import call
+import subprocess
 
 print("NETCUT BY THPHUC")
 

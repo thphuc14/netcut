@@ -1,18 +1,21 @@
+### By ThPhuc ###
 from scapy.all import *
 from mac_vendor_lookup import MacLookup
 import subprocess
 
-print("NETCUT BY THPHUC")
+print("NETCUT")
 
 def get_gw_and_network():
 	global gw, mac_gw, network
-# LẤY RA GATEWAY
+# GET GATEWAY
 	tracert = traceroute('8.8.8.8', maxttl=1, verbose=0)
 	gw = tracert[0][0][1].src
-# LẤY RA MAC GATEWAY
+
+# GET MAC GATEWAY
 	get_mac_gw = sr(ARP(pdst=gw), verbose=0)
 	mac_gw = get_mac_gw[0][0][1].hwsrc
-# LẤY RA LỚP MẠNG
+	
+# GET NETWORK
 	ip_local = IP(dst=gw).src
 	a = ip_local.split('.')
 	a[-1] = '0'
@@ -32,7 +35,10 @@ def scan_network(network):
 	for j in range(len(lsts)):
 		ip = lsts[j][0]
 		mac = lsts[j][1]
-		device_name = MacLookup().lookup(mac)
+		try:
+			device_name = MacLookup().lookup(mac)
+		except:
+			device_name = "Unknow"
 		print("[ %s ]\t\t%s\t\t%s\t\t%s" % (j, ip, mac, device_name))
 	print('-'*110)
 

